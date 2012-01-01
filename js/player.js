@@ -55,9 +55,15 @@ Player.prototype.setInputCanvas = function( id )
 	var t = this;
 	document.onkeydown = function( e ) { if ( e.target.tagName != "INPUT" ) { t.onKeyEvent( e.keyCode, true ); return false; } }
 	document.onkeyup = function( e ) { if ( e.target.tagName != "INPUT" ) { t.onKeyEvent( e.keyCode, false ); return false; } }
-	canvas.onmousedown = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.DOWN, e.which == 3 ); return false; }
-	canvas.onmouseup = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.UP, e.which == 3 ); return false; }
-	canvas.onmousemove = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.MOVE, e.which == 3 ); return false; }
+	canvas.onmousedown = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.DOWN, e.which == 3 || e.ctrlKey ); return false; }
+	canvas.onmouseup = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.UP, e.which == 3 || e.ctrlKey); return false; }
+	canvas.onmousemove = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.MOVE, e.which == 3 || e.ctrlKey); return false; }
+	window.onmousewheel = function(e) {
+		console.log(e);
+		e.stopPropagation();
+		e.preventDefault();
+		t.onScrollEvent(e.wheelDeltaX||0, e.wheelDeltaY||0)
+	}
 }
 
 // setMaterialSelector( id )
@@ -119,6 +125,13 @@ Player.prototype.onKeyEvent = function( keyCode, down )
 	this.keys[keyCode] = down;
 	
 	if ( !down && key == "t" && this.eventHandlers["openChat"] ) this.eventHandlers.openChat();
+}
+
+
+Player.prototype.onScrollEvent = function(x,y) {
+	this.scrolling= true;
+	this.targetPitch = this.angles[0] - y*0.005;
+	this.targetYaw = this.angles[1] + x*0.005;
 }
 
 // onMouseEvent( x, y, type, rmb )
@@ -193,12 +206,13 @@ Player.prototype.update = function()
 		var delta = ( new Date().getTime() - this.lastUpdate ) / 1000;
 
 		// View
-		if ( this.dragging )
+		if ( this.dragging || this.scrolling)
 		{
 			this.angles[0] += ( this.targetPitch - this.angles[0] ) * 30 * delta;
 			this.angles[1] += ( this.targetYaw - this.angles[1] ) * 30 * delta;
 			if ( this.angles[0] < -Math.PI/2 ) this.angles[0] = -Math.PI/2;
 			if ( this.angles[0] > Math.PI/2 ) this.angles[0] = Math.PI/2;
+			this.scrolling = false;
 		}
 
 		// Gravity
