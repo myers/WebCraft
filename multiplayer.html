@@ -19,6 +19,15 @@
 		<script src="js/player.js" type="text/javascript"></script>
 		<script src="js/network.js" type="text/javascript"></script>
 		
+
+		<script type="text/javascript">
+			requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||  
+                        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame 
+                        || function(func) {
+                        	setTimeout(func, 16);
+                        }
+		</script>
+
 		<!-- Load socket.io client module from Node.js server at port 3000 -->
 		<script type="text/javascript">			
 			var head = document.getElementsByTagName( "head" )[0];
@@ -167,8 +176,11 @@
 					
 					// Render loop
 					var lastUpdate = +new Date() / 1000.0;
-					setInterval( function()
-					{
+
+
+
+					requestAnimationFrame(function loop() {
+
 						var time = +new Date() / 1000.0;
 						
 						// Update local player
@@ -186,9 +198,11 @@
 						// Draw world
 						render.setCamera( player.getEyePos().toArray(), player.angles );
 						render.draw();
+
+						requestAnimationFrame(loop, page.renderSurface);
 						
-						while ( new Date().getTime() / 1000 - time < 0.016 );
-					}, 1 );
+						//while ( new Date().getTime() / 1000 - time < 0.016 );
+					}, page.renderSurface );
 				} );
 				
 				// Display chat messages
