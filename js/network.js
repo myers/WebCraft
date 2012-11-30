@@ -246,7 +246,32 @@ Client.prototype.onPlayerSetPos = function( data )
 
 function Server( socketio, slots )
 {
-	var io = this.io = socketio.listen( 3000 );
+	var fs = require('fs');
+	var path = require('path');
+	function handler (req, res) {
+		var url = path.normalize(req.url);
+		var filepath;
+		if (req.url == '/') {
+	  		filepath = __dirname + '/../multiplayer.html';
+		} else {
+			filepath = __dirname + '/..' + url;
+		}
+	  
+		fs.readFile(filepath,
+			function (err, data) {
+				if (err) {
+					res.writeHead(500);
+					return res.end('Error loading ' + filepath);
+				}
+				res.writeHead(200);
+				res.end(data);
+			}
+		);
+	}
+	
+	var app = require('http').createServer(handler);
+	app.listen(3000);
+	var io = this.io = socketio.listen(app);
 	var s = this;
 	
 	io.set( "log level", 1 );
