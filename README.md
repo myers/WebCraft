@@ -1,13 +1,34 @@
 Description
 ---------------------
 
-This project is intended to become a Minecraft Classic clone using HTML 5 technologies, most notably WebGL and WebSockets. No third-party libraries are used, with the exception of glmatrix and socket.io. People who have written similar demos used libraries such as *three.js*, but it is
-both foolish and inefficient to use a 3D engine for rendering large amount of blocks.
+This project is intended to become a Minecraft Classic clone using HTML 5
+technologies, most notably WebGL and WebSockets.  No third-party libraries
+are used, with the exception of glmatrix and socket.io.  People who have
+written similar demos used libraries such as *three.js*, but the original
+author felt it is both foolish and inefficient to use a 3D engine for
+rendering large amount of blocks.  
 
 Screenshots
 ---------------------
 
 <a href="http://i.imgur.com/tDzki.png">![Singleplayer structure](http://i.imgur.com/2qBGy.png)</a>
+
+How to Play
+---------------------
+
+Install node and socket.io.  On a mac with homebrew that looks like:
+
+    brew install node
+    npm install socket.io
+
+Get the code, and run it:
+
+    git clone https://github.com/myers/WebCraft.git
+    cd WebCraft
+    node server.js
+
+Go to http://localhost:3000/ and enjoy.  Default key configs are ESDF.  You
+WASD freaks can look at the code and make the right change.
 
 Structure
 ---------------------
