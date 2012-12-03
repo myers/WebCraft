@@ -248,6 +248,18 @@ function Server( socketio, slots )
 {
 	var fs = require('fs');
 	var path = require('path');
+
+
+	var mimeTypes = {
+    html: "text/html",
+    jpeg: "image/jpeg",
+    jpg: "image/jpeg",
+    png: "image/png",
+    js: "text/javascript",
+    css: "text/css",
+    ttf: "application/x-font-ttf"
+  };
+
 	function handler (req, res) {
 		var url = path.normalize(req.url);
 		var filepath;
@@ -256,14 +268,14 @@ function Server( socketio, slots )
 		} else {
 			filepath = __dirname + '/..' + url;
 		}
-	  
+	  var mimeType = mimeTypes[path.extname(filepath).split(".")[1]];
 		fs.readFile(filepath,
 			function (err, data) {
 				if (err) {
 					res.writeHead(500);
 					return res.end('Error loading ' + filepath);
 				}
-				res.writeHead(200);
+				res.writeHead(200, {'Content-Type': mimeType});
 				res.end(data);
 			}
 		);
