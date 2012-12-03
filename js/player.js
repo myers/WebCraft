@@ -88,10 +88,12 @@ Player.prototype.onPointerLockChange = function(event) {
 	if (!!pointerLockElement) {
 		document.addEventListener("mousemove", this.onLockedMouseMove, false);
 		document.addEventListener("mousedown", this.onLockedMouseDown, false);
+		document.getElementById("crosshair").style.visibility = null;
     // console.log("Still locked.", pointerLockElement, event);
   } else {
   	document.removeEventListener("mousemove", this.onLockedMouseMove, false);
 		document.removeEventListener("mousedown", this.onLockedMouseDown, false);
+		document.getElementById("crosshair").style.visibility = "hidden";
 
     // console.log("Exited lock.", ret);
   }
