@@ -16,6 +16,9 @@ MOUSE.MOVE = 3;
 
 function Player()
 {	
+	this.onLockedMouseMove = this.onLockedMouseMove.bind(this);
+	this.onPointerLockChange = this.onPointerLockChange.bind(this);
+	this.onLockedMouseDown = this.onLockedMouseDown.bind(this);
 }
 
 // setWorld( world )
@@ -55,16 +58,65 @@ Player.prototype.setInputCanvas = function( id )
 	var t = this;
 	document.onkeydown = function( e ) { if ( e.target.tagName != "INPUT" ) { t.onKeyEvent( e.keyCode, true ); return false; } }
 	document.onkeyup = function( e ) { if ( e.target.tagName != "INPUT" ) { t.onKeyEvent( e.keyCode, false ); return false; } }
-	canvas.onmousedown = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.DOWN, e.which == 3 || e.ctrlKey ); return false; }
-	canvas.onmouseup = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.UP, e.which == 3 || e.ctrlKey); return false; }
-	canvas.onmousemove = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.MOVE, e.which == 3 || e.ctrlKey); return false; }
+	//canvas.onmousedown = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.DOWN, e.which == 3 || e.ctrlKey ); return false; }
+	//canvas.onmouseup = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.UP, e.which == 3 || e.ctrlKey); return false; }
+	canvas.onclick = function ( e ) { t.requestPointerLock(); };
+	// canvas.onmousemove = function( e ) { t.onMouseEvent( e.clientX, e.clientY, MOUSE.MOVE, e.which == 3 || e.ctrlKey); return false; }
 	window.onmousewheel = function(e) {
-		console.log(e);
-		e.stopPropagation();
-		e.preventDefault();
-		t.onScrollEvent(e.wheelDeltaX||0, e.wheelDeltaY||0)
+	 	e.stopPropagation();
+	 	e.preventDefault();
+	// 	t.onScrollEvent(e.wheelDeltaX||0, e.wheelDeltaY||0)
 	}
+	document.addEventListener('pointerlockchange', t.onPointerLockChange, false);
+	document.addEventListener('mozpointerlockchange', t.onPointerLockChange, false);
+	document.addEventListener('webkitpointerlockchange', t.onPointerLockChange, false);
 }
+
+Player.prototype.requestPointerLock = function() {
+	this.canvas.requestPointerLock = this.canvas.requestPointerLock ||
+		this.canvas.mozRequestPointerLock ||
+		this.canvas.webkitRequestPointerLock;
+
+	this.canvas.requestPointerLock();
+};
+
+Player.prototype.onPointerLockChange = function(event) {
+  var pointerLockElement = document.pointerLockElement ||
+  	document.mozPointerLockElement ||
+    document.webkitPointerLockElement;
+
+	if (!!pointerLockElement) {
+		document.addEventListener("mousemove", this.onLockedMouseMove, false);
+		document.addEventListener("mousedown", this.onLockedMouseDown, false);
+    // console.log("Still locked.", pointerLockElement, event);
+  } else {
+  	document.removeEventListener("mousemove", this.onLockedMouseMove, false);
+		document.removeEventListener("mousedown", this.onLockedMouseDown, false);
+
+    // console.log("Exited lock.", ret);
+  }
+};
+
+Player.prototype.onLockedMouseMove = function(e) {
+  var movementX = e.movementX       ||
+                  e.mozMovementX    ||
+                  e.webkitMovementX ||
+                  0,
+      movementY = e.movementY       ||
+                  e.mozMovementY    ||
+                  e.webkitMovementY ||
+                  0;
+ 
+	this.scrolling= true;
+	this.targetPitch = this.angles[0] - movementY*0.007;
+	this.targetYaw = this.angles[1] + movementX*0.007;
+};
+
+Player.prototype.onLockedMouseDown = function(e) {
+	var middleX = window.innerWidth / 2;
+	var middleY = window.innerHeight / 2;
+	this.doBlockAction( middleX, middleY, !(e.which == 3 || e.ctrlKey) );
+};
 
 // setMaterialSelector( id )
 //

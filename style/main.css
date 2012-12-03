@@ -147,3 +147,35 @@ body {
 	font-family: minecraftia;
 	font-size: 16px;
 }
+
+#crosshair {
+	width:40px;
+	height:40px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin:-20px 0 0 -20px;
+}
+
+#crosshair_vertical {
+	position: absolute;
+	height: 0px;
+	width: 40px;
+	top: 0px;
+	left: 0;
+	border-width: 4px 0px 0px 0px;
+	border-style: solid;
+	border-color: #99aadd;
+}
+
+#crosshair_horizontal {
+	position: absolute;
+	height: 0;
+	width: 40px;
+	top: 0;
+	left: 0px;
+	border-width: 4px 0px 0px 0px;
+	border-style: solid;
+	border-color: #99aadd;
+	-webkit-transform: rotate(90deg);
+}
