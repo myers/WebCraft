@@ -21,11 +21,11 @@
 		
 
 		<script type="text/javascript">
-			requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||  
-                        window.webkitRequestAnimationFrame || window.msRequestAnimationFrame 
-                        || function(func) {
-                        	setTimeout(func, 16);
-                        }
+			requestAnimationFrame = window.requestAnimationFrame || 
+				window.mozRequestAnimationFrame ||  
+        window.webkitRequestAnimationFrame || 
+        window.msRequestAnimationFrame || 
+        function(func) { setTimeout(func, 16); }
 		</script>
 
 		<!-- Load socket.io client module from Node.js server at port 3000 -->
