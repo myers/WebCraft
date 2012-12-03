@@ -272,26 +272,26 @@ Player.prototype.update = function()
 			velocity.z += -0.5;
 
 		// Jumping
-		if ( this.keys[" "] && !this.falling )
+		if ( this.keys[localStorage["keys.jump"]] && !this.falling )
 			velocity.z = 8;
 
 		// Walking
 		var walkVelocity = new Vector( 0, 0, 0 );
 		if ( !this.falling )
 		{
-			if ( this.keys["w"] ) {
+			if ( this.keys[localStorage["keys.forward"]] ) {
 				walkVelocity.x += Math.cos( Math.PI / 2 - this.angles[1] );
 				walkVelocity.y += Math.sin( Math.PI / 2 - this.angles[1] );
 			}
-			if ( this.keys["s"] ) {
+			if ( this.keys[localStorage["keys.backward"]] ) {
 				walkVelocity.x += Math.cos( Math.PI + Math.PI / 2 - this.angles[1] );
 				walkVelocity.y += Math.sin( Math.PI + Math.PI / 2 - this.angles[1] );
 			}
-			if ( this.keys["a"] ) {
+			if ( this.keys[localStorage["keys.left"]] ) {
 				walkVelocity.x += Math.cos( Math.PI / 2 + Math.PI / 2 - this.angles[1] );
 				walkVelocity.y += Math.sin( Math.PI / 2 + Math.PI / 2 - this.angles[1] );
 			}
-			if ( this.keys["d"] ) {
+			if ( this.keys[localStorage["keys.right"]] ) {
 				walkVelocity.x += Math.cos( -Math.PI / 2 + Math.PI / 2 - this.angles[1] );
 				walkVelocity.y += Math.sin( -Math.PI / 2 + Math.PI / 2 - this.angles[1] );
 			}

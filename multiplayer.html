@@ -35,6 +35,7 @@
 			script.type = "text/javascript";
 			script.src = "http://" + location.hostname + ":3000/socket.io/socket.io.js";
 			head.appendChild( script );
+			script.onload = function() { onSocketIoLoaded(); };
 		</script>
 	</head>
 	
@@ -84,10 +85,26 @@
 			
 			// Game elements
 			var client, render, world, player
-			
+
 			// Focus on username field
 			page.nicknameInput.focus();
 			
+			
+			localStorage.setItem("keys.forward", "e");
+			localStorage.setItem("keys.left", "s");
+			localStorage.setItem("keys.right", "f");
+			localStorage.setItem("keys.backward", "d");
+			localStorage.setItem("keys.jump", " ");
+
+
+
+			function onSocketIoLoaded() {
+				var nickname = localStorage.getItem("nickname");
+				if (nickname != null) {
+					joinGame( nickname );
+				}
+			}
+
 			// Respond to username entry
 			function onNicknameEnter( nicknameInput, keyEvent )
 			{
@@ -98,6 +115,7 @@
 				
 				nicknameInput.blur();
 				
+				localStorage.setItem("nickname", nickname);
 				joinGame( nickname );
 			}
 			
