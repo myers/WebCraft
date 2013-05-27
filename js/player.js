@@ -65,7 +65,7 @@ Player.prototype.setInputCanvas = function( id )
 	window.onmousewheel = function(e) {
 	 	e.stopPropagation();
 	 	e.preventDefault();
-	// 	t.onScrollEvent(e.wheelDeltaX||0, e.wheelDeltaY||0)
+	  t.onScrollEvent(e.wheelDeltaX||0, e.wheelDeltaY||0)
 	}
 	document.addEventListener('pointerlockchange', t.onPointerLockChange, false);
 	document.addEventListener('mozpointerlockchange', t.onPointerLockChange, false);
@@ -126,6 +126,7 @@ Player.prototype.onLockedMouseDown = function(e) {
 
 Player.prototype.setMaterialSelector = function( id )
 {
+	this.materialSelectorId = id;
 	var tableRow = document.getElementById( id ).getElementsByTagName( "tr" )[0];
 	var texOffset = 0;
 
@@ -138,14 +139,8 @@ Player.prototype.setMaterialSelector = function( id )
 
 			var pl = this;
 			selector.material = BLOCK[mat];
-			selector.onclick = function()
-			{
-				this.style.opacity = "1.0";
-
-				pl.prevSelector.style.opacity = null;
-				pl.prevSelector = this;
-
-				pl.buildMaterial = this.material;
+			selector.onclick = function() {
+				pl.selectMaterialToElement(this);
 			}
 
 			if ( mat == "DIRT" ) {
@@ -157,6 +152,21 @@ Player.prototype.setMaterialSelector = function( id )
 			texOffset -= 70;
 		}
 	}
+}
+
+Player.prototype.nextMaterial = function() {
+	for (el in document.getElementById( id ).getElementsByTagName( "td" )) {
+		console.log(el);
+	}
+}
+
+Player.prototype.selectMaterialToElement = function(element) {
+	element.style.opacity = "1.0";
+
+	this.prevSelector.style.opacity = null;
+  this.prevSelector = element;
+
+	this.buildMaterial = element.material;
 }
 
 // on( event, callback )
@@ -183,9 +193,9 @@ Player.prototype.onKeyEvent = function( keyCode, down )
 
 
 Player.prototype.onScrollEvent = function(x,y) {
-	this.scrolling= true;
-	this.targetPitch = this.angles[0] - y*0.005;
-	this.targetYaw = this.angles[1] + x*0.005;
+	//this.scrolling= true;
+	//this.targetPitch = this.angles[0] - y*0.005;
+	//this.targetYaw = this.angles[1] + x*0.005;
 }
 
 // onMouseEvent( x, y, type, rmb )
